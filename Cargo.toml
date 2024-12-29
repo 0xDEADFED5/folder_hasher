@@ -1,0 +1,13 @@
+[package]
+name = "folder_hasher"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+indicatif = "0.17.9"
+walkdir = "2"
+
+[dependencies.xxhash-rust]
+version = "0.8.12"
+features = ["xxh3"]
+
