@@ -6,7 +6,7 @@ hashing algorithm used: XXH3-128 (XXH128)
 
 if you run folder_hasher and hashes.txt doesn't exist:
 
-it will hash every file current folder and all subfolders and save the hashes in hashes.txt
+it will hash every file in current folder and all subfolders and save the hashes in hashes.txt
 
 if you run folder_hasher and hashes.txt does exist:
 
