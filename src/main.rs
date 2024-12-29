@@ -84,14 +84,14 @@ fn verify_hashes() -> (u32, u32, u32) {
         let split_pos = s.char_indices().nth_back(32).unwrap().0;
         let hex = &s[1 + split_pos..];
         let path = &s[..split_pos];
-        let file = File::open(path);
-        if file.is_err() {
-            println!("Error opening file: {}", file.err().unwrap());
+        let file2 = File::open(path);
+        if file2.is_err() {
+            println!("Error opening file: {}", file2.err().unwrap());
             not_found += 1;
             missing_paths.push(path.to_string());
             continue;
         }
-        let mut reader = BufReader::new(file.unwrap());
+        let mut reader = BufReader::new(file2.unwrap());
         let len = fs::metadata(path).unwrap().len();
         let pb = ProgressBar::new(len);
         hasher.reset();
