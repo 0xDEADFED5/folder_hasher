@@ -1,13 +1,14 @@
 ## folder_hasher
 
-this is a very simple utility to hash (or verify the hashes of) every file in the current folder and all subfolders.
-hashing algorithm used: XXH3-128
+this is a very simple utility to hash every file in the current folder and all subfolders
 
-if you run this and hashes.txt doesn't exist:
+hashing algorithm used: XXH3-128 (XXH128)
 
-it will hash every file in this folder and all subfolders and save the hashes in hashes.txt
+if you run folder_hasher and hashes.txt doesn't exist:
 
-if you run this and hashes.txt does exist:
+it will hash every file current folder and all subfolders and save the hashes in hashes.txt
+
+if you run folder_hasher and hashes.txt does exist:
 
 it will check the hashes listed in hashes.txt and show the results
 
