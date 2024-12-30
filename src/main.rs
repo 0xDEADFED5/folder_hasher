@@ -91,6 +91,7 @@ fn verify_hashes() -> (u32, u32, u32) {
             missing_paths.push(path.to_string());
             continue;
         }
+        println!("hashing: {}", path);
         let mut reader = BufReader::new(file2.unwrap());
         let len = fs::metadata(path).unwrap().len();
         let pb = ProgressBar::new(len);
