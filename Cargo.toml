@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+humanize-bytes = "1.0.6"
 indicatif = "0.17.9"
 walkdir = "2"
 

@@ -6,16 +6,21 @@ use std::fs::File;
 use std::fs;
 use std::io::{BufRead, BufReader, Read, Write};
 use indicatif::ProgressBar;
+use humanize_bytes::humanize_bytes_decimal;
+use std::time::{Duration, Instant};
+use std::cmp;
 
 const BUF_SIZE: usize = 1024 * 1024 * 8;
 
 fn generate_hashes() -> (u32, u32) {
+    let start = Instant::now();
     let files = WalkDir::new(".").into_iter().filter_map(|e| e.ok());
     let mut hasher = Xxh3Default::new();
     let mut buffer = vec![0; BUF_SIZE];
     let mut count = 0;
     let mut good_files = 0;
     let mut bad_files = 0;
+    let mut total = 0;
     let mut first = true;
     let mut result = String::new();
     let name = format!(".\\{}", self_name().unwrap());
@@ -36,6 +41,7 @@ fn generate_hashes() -> (u32, u32) {
         } else {
             good_files += 1;
         }
+        total += meta.len();
         let mut reader = BufReader::new(file.unwrap());
         let pb = ProgressBar::new(meta.len());
         hasher.reset();
@@ -60,11 +66,17 @@ fn generate_hashes() -> (u32, u32) {
     }
     fs::write("hashes.txt", result).expect("Unable to write hashes.txt!");
     println!("hashes.txt saved.");
+    let mut duration: f64 = start.elapsed().as_millis() as f64 / 1000.0;
+    if duration == 0.0 {
+        duration = 0.001;
+    }
+    println!("Average hashing speed for entire run: {}/sec", humanize_bytes_decimal!(total as f64/duration));
     (good_files, bad_files)
 }
 
 fn verify_hashes() -> (u32, u32, u32) {
     // returns verified, failed, not found
+    let start = Instant::now();
     let mut hasher = Xxh3Default::new();
     let mut buffer = vec![0; BUF_SIZE];
     let mut verified = 0;
@@ -73,6 +85,7 @@ fn verify_hashes() -> (u32, u32, u32) {
     let mut failed_paths: Vec<String> = Vec::new();
     let mut missing_paths: Vec<String> = Vec::new();
     let mut count = 0;
+    let mut total = 0;
     let file = File::open("hashes.txt");
     if file.is_err() {
         println!("Error opening hashes.txt: {}", file.err().unwrap());
@@ -94,6 +107,7 @@ fn verify_hashes() -> (u32, u32, u32) {
         println!("hashing: {}", path);
         let mut reader = BufReader::new(file2.unwrap());
         let len = fs::metadata(path).unwrap().len();
+        total += len;
         let pb = ProgressBar::new(len);
         hasher.reset();
         loop {
@@ -128,6 +142,11 @@ fn verify_hashes() -> (u32, u32, u32) {
             println!("{}", p);
         }
     }
+    let mut duration: f64 = start.elapsed().as_millis() as f64 / 1000.0;
+    if duration == 0.0 {
+        duration = 0.001;
+    }
+    println!("Average hashing speed for entire run: {}/sec", humanize_bytes_decimal!(total as f64/duration));
     (verified, failed, not_found)
 }
 
