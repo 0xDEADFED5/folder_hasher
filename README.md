@@ -1,5 +1,7 @@
 ## folder_hasher
 
+![screenshot](./hash.png)
+
 this is a very simple utility to hash every file in the current folder and all subfolders
 
 hashing algorithm used: XXH3-128 (XXH128)
