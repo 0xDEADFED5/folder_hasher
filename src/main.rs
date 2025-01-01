@@ -64,13 +64,12 @@ fn generate_hashes() -> (u32, u32) {
             result = format!("{}\n{} {:032X?}", result, f.path().display(), hasher.digest128());
         }
     }
-    fs::write("hashes.txt", result).expect("Unable to write hashes.txt!");
-    println!("hashes.txt saved.");
-    let mut duration: f64 = start.elapsed().as_millis() as f64 / 1000.0;
-    if duration == 0.0 {
-        duration = 0.001;
+    if good_files != 0 {
+        fs::write("hashes.txt", result).expect("Unable to write hashes.txt!");
+        println!("hashes.txt saved.");
+        let duration: f64 = cmp::max(start.elapsed().as_millis(), 1) as f64 / 1000.0;
+        println!("Average hashing speed for entire run: {}/sec", humanize_bytes_decimal!(total as f64/duration));
     }
-    println!("Average hashing speed for entire run: {}/sec", humanize_bytes_decimal!(total as f64/duration));
     (good_files, bad_files)
 }
 
@@ -142,10 +141,7 @@ fn verify_hashes() -> (u32, u32, u32) {
             println!("{}", p);
         }
     }
-    let mut duration: f64 = start.elapsed().as_millis() as f64 / 1000.0;
-    if duration == 0.0 {
-        duration = 0.001;
-    }
+    let duration: f64 = cmp::max(start.elapsed().as_millis(), 1) as f64 / 1000.0;
     println!("Average hashing speed for entire run: {}/sec", humanize_bytes_decimal!(total as f64/duration));
     (verified, failed, not_found)
 }
